@@ -1,0 +1,15 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="compose"
+        android:enabled="true"
+        android:icon="@drawable/baseline_add_white_18dp"
+        android:shortcutShortLabel="@string/fast_add_debt"
+        android:shortcutLongLabel="@string/fast_add_debt"
+        android:shortcutDisabledMessage="@string/fast_add_debt">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.github.xfl03.aadebt"
+            android:targetClass="com.github.xfl03.aadebt.android.activity.DebtNewActivity"/>
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+</shortcuts>
