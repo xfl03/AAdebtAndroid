@@ -57,8 +57,7 @@ class MainActivity : AppCompatActivity() {
 
 
         if (sp.getString("token", "").isNullOrEmpty()) {
-            startActivityForResult(Intent(this, LoginActivity::class.java), 0)
-            //finish()
+            requestLogin()
         } else {
             GsonRequest.setToken(sp.getString("token", null))
             loadGroupList()
@@ -119,6 +118,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun logout() {
         sp.edit().putString("token", "").apply()
+        requestLogin()
+    }
+
+    private fun requestLogin(){
         startActivityForResult(Intent(this, LoginActivity::class.java), 0)
     }
 }

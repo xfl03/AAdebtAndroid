@@ -86,6 +86,8 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         load()
+        //Default Opcode
+        setResult(Constant.OP_CLOSE)
     }
 
     fun check(name: String?, email: String?, password: String?): Boolean {

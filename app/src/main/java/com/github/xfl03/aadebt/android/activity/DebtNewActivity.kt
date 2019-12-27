@@ -1,6 +1,7 @@
 package com.github.xfl03.aadebt.android.activity
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -24,10 +25,13 @@ import kotlin.math.roundToInt
 class DebtNewActivity : AppCompatActivity() {
     private lateinit var requestQueue: RequestQueue
     private lateinit var sp: SharedPreferences
+    private lateinit var sp1: SharedPreferences
 
     var id = 0
     var name = ""
     var selected = -1
+
+    var quickDebt = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +39,7 @@ class DebtNewActivity : AppCompatActivity() {
 
         requestQueue = Volley.newRequestQueue(this)
         sp = getSharedPreferences("debt", Context.MODE_PRIVATE)
+        sp1 = getSharedPreferences("data", Context.MODE_PRIVATE)
 
         if (intent != null) {
             id = intent.getIntExtra("id", 0)
@@ -45,8 +50,16 @@ class DebtNewActivity : AppCompatActivity() {
         if (id == 0) {
             id = sp.getInt("id", 0)
             name = sp.getString("name", "")!!
+            quickDebt = true
         }
         Constant.log(id.toString())
+
+        if (id == 0 || sp1.getString("token", "").isNullOrEmpty()) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        } else {
+            GsonRequest.setToken(sp1.getString("token", null))
+        }
 
         title = name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -109,7 +122,16 @@ class DebtNewActivity : AppCompatActivity() {
             DebtAddRequest(id, name, parseAmount(amount), type, date, special),
             Response.Listener {
                 if (it is CommonResponse) {
-                    setResult(Constant.OP_REFRESH)
+                    Constant.log(it.msg)
+                    Constant.toast(this, "添加成功")
+                    if (!quickDebt) {
+                        setResult(Constant.OP_REFRESH)
+                    } else {
+                        val int = Intent(this, DebtActivity::class.java)
+                        int.putExtra("id", id)
+                        int.putExtra("name", name)
+                        startActivity(int)
+                    }
                     finish()
                 }
             }
