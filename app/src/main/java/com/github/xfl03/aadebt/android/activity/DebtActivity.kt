@@ -13,6 +13,7 @@ import com.android.volley.toolbox.Volley
 import com.github.xfl03.aadebt.R
 import com.github.xfl03.aadebt.android.listener.FabTouchListener
 import com.github.xfl03.aadebt.android.util.Constant
+import com.github.xfl03.aadebt.android.util.Constant.Companion.parseAmount
 import com.github.xfl03.aadebt.android.util.GsonRequest
 import com.github.xfl03.aadebt.json.debt.DebtCalRequest
 import com.github.xfl03.aadebt.json.debt.DebtCalResponse
@@ -21,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_debt.*
 class DebtActivity : AppCompatActivity() {
     private lateinit var requestQueue: RequestQueue
     private lateinit var sp: SharedPreferences
+    private lateinit var sp1: SharedPreferences
 
     private var id = 0
     private var name = ""
@@ -30,26 +32,48 @@ class DebtActivity : AppCompatActivity() {
         setContentView(R.layout.activity_debt)
 
         requestQueue = Volley.newRequestQueue(this)
-        sp = getSharedPreferences("fab", Context.MODE_PRIVATE)
+        sp = getSharedPreferences("debt", Context.MODE_PRIVATE)
+        sp1 = getSharedPreferences("data", Context.MODE_PRIVATE)
 
         if (intent != null) {
             id = intent.getIntExtra("id", 0)
-            name = intent.getStringExtra("name")
+            if (intent.hasExtra("name")) {
+                name = intent.getStringExtra("name")
+            }
+        }
+        if (id == 0) {
+            id = sp.getInt("id", 0)
+            name = sp.getString("name", "")!!
+        }
+
+        if (id == 0 || sp1.getString("token", "").isNullOrEmpty()) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        } else {
+            GsonRequest.setToken(sp1.getString("token", null))
         }
 
         title = name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        val lis = FabTouchListener(this)
         fab.apply {
-            x = sp.getFloat("x", 60f)
-            y = sp.getFloat("y", 699f)
-            setOnTouchListener(FabTouchListener(this@DebtActivity))
+            x = lis.defaultX()
+            y = lis.defaultY()
+            setOnTouchListener(lis)
             setOnClickListener {
                 val intent = Intent(this@DebtActivity, DebtNewActivity::class.java)
                 intent.putExtra("id", this@DebtActivity.id)
                 intent.putExtra("name", name)
                 startActivityForResult(intent, 0)
             }
+        }
+
+        buttonDebtList.setOnClickListener {
+            val intent = Intent(this, DebtListActivity::class.java)
+            intent.putExtra("id", id)
+            intent.putExtra("name", name)
+            startActivity(intent)
         }
 
         loadNormalDebt(id)
@@ -93,7 +117,6 @@ class DebtActivity : AppCompatActivity() {
         requestQueue.add(request)
     }
 
-    fun parseAmount(amount: Int) = String.format("%d.%d", amount / 100, amount % 100)
     fun <T> getLatest(list: List<T>): T? {
         return if (list.isEmpty()) null else list[list.size - 1]
     }

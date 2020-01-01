@@ -17,6 +17,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.Volley
 import com.github.xfl03.aadebt.R
 import com.github.xfl03.aadebt.android.list.BasicListAdapter
+import com.github.xfl03.aadebt.android.listener.FabTouchListener
 import com.github.xfl03.aadebt.android.util.Constant
 import com.github.xfl03.aadebt.android.util.GsonRequest
 import com.github.xfl03.aadebt.json.aa.AAlistResponse
@@ -61,6 +62,17 @@ class MainActivity : AppCompatActivity() {
         } else {
             GsonRequest.setToken(sp.getString("token", null))
             loadGroupList()
+        }
+
+        val lis = FabTouchListener(this)
+        fab2.apply {
+            x = lis.defaultX()
+            y = lis.defaultY()
+            setOnTouchListener(lis)
+            setOnClickListener {
+                val intent = Intent(this@MainActivity, GroupNewActivity::class.java)
+                startActivityForResult(intent, 0)
+            }
         }
     }
 
@@ -109,7 +121,6 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     listAdapter.update(data)
-
                 }
             }
         )

@@ -33,6 +33,10 @@ class GsonRequest<T : com.github.xfl03.aadebt.json.Response>(
             token = newToken
         }
 
+        fun hasToken(): Boolean {
+            return token == null
+        }
+
         private val defaultErrorListener = Response.ErrorListener {
             Constant.log("ERROR: $it")
         }

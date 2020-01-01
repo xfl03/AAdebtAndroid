@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.xfl03.aadebt.R
-import com.github.xfl03.aadebt.json.aa.DebtDetailInfo
+import com.github.xfl03.aadebt.android.util.Constant
+import com.github.xfl03.aadebt.json.debt.DebtDetailInfo
 import com.github.xfl03.aadebt.json.aa.GroupInfo
 
-class BasicListAdapter<T>(private val listener: (T) -> Unit) :
+class BasicListAdapter<T>(private val listener: (T) -> Unit = {}) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         fun <T> newDataList() = ArrayList<T>()
@@ -35,7 +36,9 @@ class BasicListAdapter<T>(private val listener: (T) -> Unit) :
             holder.itemView
                 .findViewById<TextView>(R.id.textViewName).text = d.name
             holder.itemView
-                .findViewById<TextView>(R.id.textViewInfo).text = "${d.amount}"
+                .findViewById<TextView>(R.id.textViewInfo).text = Constant.parseAmount(d.amount) +
+                    if (d.special) " 非日常开销" else ""
+
         }
         holder.itemView.setOnClickListener {
             onClick(position)

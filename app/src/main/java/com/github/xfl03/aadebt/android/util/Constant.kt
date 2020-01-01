@@ -34,5 +34,12 @@ class Constant {
         fun toast(context: Context, msg: String) {
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         }
+
+        fun parseAmount(amount: Int): String {
+            return if (amount % 10 == 0)
+                String.format("%d.%d", amount / 100, (amount % 100) / 10)
+            else
+                String.format("%d.%02d", amount / 100, amount % 100)
+        }
     }
 }

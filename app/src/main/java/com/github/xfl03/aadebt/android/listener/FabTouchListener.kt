@@ -71,4 +71,12 @@ class FabTouchListener(private val context: Context) : View.OnTouchListener {
             else -> false
         }
     }
+
+    fun defaultX(): Float {
+        return sp.getFloat("x", 60f)
+    }
+
+    fun defaultY(): Float {
+        return sp.getFloat("y", 699f)
+    }
 }

@@ -11,8 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".android.activity.DebtNewActivity">
-        </activity>
+        <activity android:name=".android.activity.DebtListActivity"></activity>
+        <activity android:name=".android.activity.GroupNewActivity" />
+        <activity android:name=".android.activity.DebtNewActivity" />
         <activity android:name=".android.activity.DebtActivity" />
         <activity android:name=".android.activity.LoginActivity" />
         <activity android:name=".android.activity.MainActivity">
@@ -21,6 +22,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
