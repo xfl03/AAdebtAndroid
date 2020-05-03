@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/openjdk
+      - image: circleci/android:api-28
 
     working_directory: ~/repo
 
@@ -21,14 +21,15 @@ jobs:
       # Gradle Wrapper
       - run: sudo chmod +x gradlew
       - run: ./gradlew --version
-      - run: ./gradlew clean build
+      - run: ./gradlew androidDependencies
+      - run: ./gradlew assembleDebug
 
       # Gradle
       # - run: gradle --version
       # - run: gradle clean build
 
       - store_artifacts:
-          path: ./build/libs
+          path: ./app/build/outputs/apk/
 
       - save_cache:
           paths:
