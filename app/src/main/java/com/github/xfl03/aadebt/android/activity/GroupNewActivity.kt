@@ -39,7 +39,7 @@ class GroupNewActivity : AppCompatActivity() {
     fun newGroup(name: String) {
         val request = GsonRequest(
             CommonResponse::class.java,
-            Request.Method.GET,
+            Request.Method.POST,
             Constant.BASE_URL + "/api/debt/new",
             DebtNewRequest(name),
             Response.Listener { res ->
